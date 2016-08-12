@@ -83,8 +83,7 @@ class ObjectUploadSubscriber implements EventSubscriber
     {
         $object = $args->getObject();
         if ($object instanceof UploadObjectInterface) {
-            $objectManager = $args->getEntityManager();
-            $this->prepareUploadFileReferences($object, $objectManager);
+            $this->prepareUploadFileReferences($object);
         }
     }
 
@@ -97,8 +96,7 @@ class ObjectUploadSubscriber implements EventSubscriber
     {
         $object = $args->getObject();
         if ($object instanceof UploadObjectInterface) {
-            $objectManager = $args->getEntityManager();
-            $this->storeFileUploads($object, $objectManager);
+            $this->storeFileUploads($object);
         }
     }
 
@@ -126,7 +124,7 @@ class ObjectUploadSubscriber implements EventSubscriber
      *
      * @param UploadObjectInterface $object
      */
-    private function prepareUploadFileReferences(UploadObjectInterface $object, $objectManager)
+    private function prepareUploadFileReferences(UploadObjectInterface $object)
     {
         $object->setFileUploadPath($this->fileUploadPath);
         $reflectionClass = new ReflectionClass($object);
@@ -153,7 +151,7 @@ class ObjectUploadSubscriber implements EventSubscriber
      *
      * @param UploadObjectInterface $object
      */
-    private function storeFileUploads(UploadObjectInterface $object, $objectManager)
+    private function storeFileUploads(UploadObjectInterface $object)
     {
         $reflectionClass = new ReflectionClass($object);
         $objectName = $reflectionClass->getShortName();
