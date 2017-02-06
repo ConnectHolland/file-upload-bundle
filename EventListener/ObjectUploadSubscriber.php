@@ -65,10 +65,11 @@ class ObjectUploadSubscriber implements EventSubscriber
         $objectManager = $args->getEntityManager();
         $unitOfWork = $objectManager->getUnitOfWork();
         $entityMap = $unitOfWork->getIdentityMap();
+        $objectManager = $args->getEntityManager();
         foreach ($entityMap as $objectClass => $objects) {
             if (is_subclass_of($objectClass, UploadObjectInterface::class)) {
                 foreach ($objects as $object) {
-                    $this->prepareUploadFileReferences($object);
+                    $this->prepareUploadFileReferences($object, $objectManager);
                 }
             }
         }
