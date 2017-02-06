@@ -32,7 +32,8 @@ trait UploadTrait
      */
     public function getFileUpload()
     {
-        $propertyName = $this->getFileUploadPropertyName();
+        $propertyName = $this->getFileUploadPropertyName(__FUNCTION__);
+
         if (isset($this->fileUploads[$propertyName])) {
             return $this->fileUploads[$propertyName];
         }
@@ -55,7 +56,8 @@ trait UploadTrait
      */
     public function setFileUpload(UploadedFile $file = null)
     {
-        $propertyName = $this->getFileUploadPropertyName();
+        $propertyName = $this->getFileUploadPropertyName(__FUNCTION__);
+
         unset($this->fileUploads[$propertyName]);
         if ($file instanceof UploadedFile) {
             $this->fileUploads[$propertyName] = $file;
@@ -77,8 +79,14 @@ trait UploadTrait
      *
      * @return string
      */
-    private function getFileUploadPropertyName()
+    private function getFileUploadPropertyName($realCallerMethod)
     {
-        return lcfirst(substr(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)[1]['function'], 3, -6));
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+        $callerMethodName = $backtrace[1]['function'];
+        if ($callerMethodName === $realCallerMethod) {
+            $callerMethodName = $backtrace[2]['function'];
+        }
+
+        return lcfirst(substr($callerMethodName, 3, -6));
     }
 }
